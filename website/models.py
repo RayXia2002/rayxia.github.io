@@ -23,6 +23,7 @@ class Employee(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     first_name = db.Column(db.String(30))
     last_name = db.Column(db.String(30))
+    moderator = db.Column(db.Boolean)
     attendees = db.relationship('Attendees')
 
 class Attendees(db.Model):
