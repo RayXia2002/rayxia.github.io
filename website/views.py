@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import login_required, current_user
-import json
 import psycopg2
 import psycopg2.extras
 from . import conn
@@ -11,9 +10,27 @@ views = Blueprint('views', __name__)
 @login_required
 def calendar():
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    cur.execute("SELECT * FROM meeting ORDER BY ID")
+    cur.execute("SELECT * FROM Meeting JOIN Attendees ON (Meeting.ID = Attendees.meetingid) WHERE Attendees.employeeID = %s ORDER BY Meeting.ID", [current_user.employeeid])
     calendar = cur.fetchall()
     return render_template('calendar.html', calendar = calendar)
+
+@views.route('/mandatory')
+@login_required
+def mandatory():
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur.execute("SELECT * FROM Meeting JOIN Attendees ON (Meeting.ID = Attendees.meetingid) WHERE Attendees.employeeID = %s AND mandatory = true ORDER BY Meeting.ID", [current_user.employeeid])
+    calendar = cur.fetchall()
+    return render_template('calendar.html', calendar = calendar)
+
+@views.route('/optional')
+@login_required
+def optional():
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur.execute("SELECT * FROM Meeting WHERE Meeting.mandatory = false ORDER BY Meeting.ID")
+    calendar = cur.fetchall()
+    return render_template('calendar.html', calendar = calendar)
+
+
 
 @views.route("/insert", methods=["POST","GET"])
 def insert():
