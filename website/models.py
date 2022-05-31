@@ -18,6 +18,7 @@ class Account(db.Model, UserMixin):
     username = db.Column(db.String(30), unique = True)
     password = db.Column(db.String(30))
     employeeid = db.Column(db.Integer, db.ForeignKey('employee.id'))
+    roleid = db.Column(db.Integer, db.ForeignKey('role.id'))
 
 class Employee(db.Model):
     id = db.Column(db.Integer, primary_key = True)
