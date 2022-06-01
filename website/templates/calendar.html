@@ -68,7 +68,7 @@
                     center:'title',
                     right:'month,agendaWeek,agendaDay'
                 },
-                events: [{% for row in calendar %}{ id : '{{row.id}}', title: '{{row.purpose}}', start: '{{row.start_time}}', end : '{{row.end_time}}', }, {% endfor %}],
+                events: [{% for row in calendar %}{ id : '{{row.id}}', title: '{{row.purpose}}', start: '{{row.start_time}}', end : '{{row.end_time}}', locationid:'{{row.locationid}}', moderatorid:'{{row.moderatorid}}' }, {% endfor %}],
                 selectable:true,
                 selectHelper:true,
 
@@ -140,9 +140,20 @@
                     })
                 },
                 
-                // delete meeting
                 eventClick:function(event)
                 {
+                    PictureInPictureWindow
+                    alert(
+                        "Event Title: " + event.title + "\n" +
+                        "Start Time: " + $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss") + 
+                        "\n" +
+                        "End Time: " + $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss") +
+                        "\n" +
+                        "Location: " + event.locationid +
+                        "\n" +
+                        "Moderator: " + event.moderatorid
+                    );
+                    console.log(event);
                     if(confirm("Are you sure you want to remove it?"))
                     {
                         var id = event.id;
