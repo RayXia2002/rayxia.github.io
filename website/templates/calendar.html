@@ -94,7 +94,12 @@
                                 //alert(data)
                                 alert("Added Successfully");
                                 window.location.replace("/");
+                            },
+                            error:function()
+                            {
+                            alert("You are not authorized to create this meeting!")
                             }
+                            
                         })
                     }
                 },
@@ -116,6 +121,10 @@
                         {
                             calendar.fullCalendar('refetchEvents');
                             alert("Meeting updated sucessfully!");
+                        },
+                        error:function()
+                        {
+                            alert("You are not authorized to update this meeting!")
                         }
                     })
                 },
@@ -136,6 +145,10 @@
                         {
                             calendar.fullCalendar('refetchEvents');
                             alert("Meeting updated sucessfully!");
+                        },
+                        error:function()
+                        {
+                            alert("You are not authorized to update this meeting!")
                         }
                     })
                 },
@@ -165,6 +178,10 @@
                             {
                                 calendar.fullCalendar('refetchEvents');
                                 alert("Meeting removed successfully!");
+                            },
+                            error:function()
+                            {
+                                alert("You are not authorized to remove this meeting!")
                             }
                         })
                     }
