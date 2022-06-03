@@ -34,6 +34,7 @@ class Attendees(db.Model):
 
 class Location(db.Model):
     id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(20), unique = True)
     address = db.Column(db.String(30))
     state = db.Column(db.String(2))
     zipcode = db.Column(db.String(5))

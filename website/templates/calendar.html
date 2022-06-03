@@ -80,15 +80,15 @@
                     {
                         var start = prompt("Enter start time. Format: YYYY-MM-DD HH:mm:ss");
                         var end = prompt("Enter end time. Format: YYYY-MM-DD HH:mm:ss");
-                        var locationid = prompt("Enter Location");
+                        var locationname = prompt("Enter Location");
                         var mandatory = prompt("Yes or No: Mandatory?");
                         var remote = prompt("Yes or No: Remote?");
-                        var moderatorid = prompt("Enter moderator ID");
+                        var moderatorusername = prompt("Enter moderator username");
                         $.ajax({
                             url:"/insert",
                             type:"POST",
                             cache:false,
-                            data:{purpose:purpose, start:start, end:end, locationid:locationid, mandatory:mandatory, remote:remote, moderatorid:moderatorid},
+                            data:{purpose:purpose, start:start, end:end, locationname:locationname, mandatory:mandatory, remote:remote, moderatorusername:moderatorusername},
                             success:function(data)
                             {
                                 //alert(data)

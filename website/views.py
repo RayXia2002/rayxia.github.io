@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 import psycopg2
 import psycopg2.extras
 from . import conn
+from .models import Location, Account
 
 views = Blueprint('views', __name__)
 
@@ -40,11 +41,19 @@ def insert():
             purpose = request.form['purpose']
             start = request.form['start']
             end = request.form['end']
-            locationid = request.form['locationid']
+            locationname = request.form['locationname']
+            location = Location.query.filter_by(name=locationname).first()
+            locationid = location.id
             mandatory = request.form['mandatory']
             remote = request.form['mandatory']
-            moderatorid = request.form['moderatorid']
-            cur.execute("INSERT INTO Meeting (purpose, start_time, end_time, locationid, mandatory, remote, moderatorid) VALUES (%s,%s,%s,%s,%s,%s,%s)", [purpose, start, end, locationid, mandatory, remote, moderatorid])
+            moderatorusername = request.form['moderatorusername']
+            moderator = Account.query.filter_by(username=moderatorusername).first()
+            moderatorid = moderator.employeeid
+            
+            cur.execute("INSERT INTO Meeting (purpose, start_time, end_time, locationid, mandatory, remote, moderatorid) VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING id", [purpose, start, end, locationid, mandatory, remote, moderatorid])
+            meetingid = cur.fetchone()["id"]
+            conn.commit()
+            cur.execute("INSERT INTO Attendees (employeeid, meetingid) VALUES (%s,%s)", [moderatorid, meetingid])
             conn.commit()
             cur.close()
             msg = 'success'
@@ -71,6 +80,7 @@ def delete():
         cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         if request.method == 'POST':
             id = request.form['id']
+            cur.execute("DELETE FROM attendees WHERE meetingid = {0}".format(id))
             cur.execute("DELETE FROM meeting WHERE id = {0}".format(id))
             conn.commit()
             cur.close()
