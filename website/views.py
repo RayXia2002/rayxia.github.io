@@ -11,7 +11,16 @@ views = Blueprint('views', __name__)
 @login_required
 def calendar():
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    cur.execute("SELECT * FROM Meeting JOIN Attendees ON (Meeting.ID = Attendees.meetingid) WHERE Attendees.employeeID = %s ORDER BY Meeting.ID", [current_user.employeeid])
+    cur.execute("SELECT Meeting.id, locationid, purpose, start_time, end_time, mandatory, remote, \
+    moderatorid, address, state, zipcode, zoom, Location.name AS locationname, \
+    username \
+    FROM Meeting \
+    JOIN Attendees ON (Meeting.ID = Attendees.meetingid) \
+    JOIN Location ON (Meeting.locationid = Location.id) \
+    JOIN Employee ON (Meeting.moderatorid = Employee.id) \
+    JOIN Account ON (Meeting.moderatorid = Account.employeeid) \
+    WHERE Attendees.employeeID = %s \
+    ORDER BY Meeting.ID", [current_user.employeeid])
     calendar = cur.fetchall()
     return render_template('calendar.html', calendar = calendar)
 
