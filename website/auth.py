@@ -52,10 +52,10 @@ def sign_up():
         elif len(password1) < 5:
             flash('Password must be at least 5 characters.', category='error')
         else:
-            new_employee = Employee(first_name=first_name, last_name=last_name, roleid=2)
+            new_employee = Employee(first_name=first_name, last_name=last_name, moderator=False)
             db.session.add(new_employee)
             db.session.flush()
-            new_user = Account(employeeid = new_employee.id, username=username, password = password1)
+            new_user = Account(employeeid = new_employee.id, username=username, password = password1, roleid = 2)
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)

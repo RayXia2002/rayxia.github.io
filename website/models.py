@@ -40,3 +40,8 @@ class Location(db.Model):
     zipcode = db.Column(db.String(5))
     zoom = db.Column(db.String(30))
     meetings = db.relationship('Meeting')
+    
+class Role(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(30), unique = True)
+    accounts = db.relationship('Account')
