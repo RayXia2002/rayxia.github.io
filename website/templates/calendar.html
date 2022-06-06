@@ -166,6 +166,27 @@
                         "\n" +
                         "Moderator: " + event.username
                     );
+
+                    if(confirm("Want to add attendees?"))
+                    {
+                        var meetingid = event.id
+                        var employeeusername = prompt("Employee Username?")
+                        $.ajax({
+                            url:"/insattendee",
+                            type:"POST",
+                            cache:false,
+                            data:{meetingid:meetingid, employeeusername: employeeusername},
+                            success:function()
+                            {
+                                alert("Added Successfully");
+                                window.location.replace("/");
+                            },
+                            error:function()
+                            {
+                            alert("You are not authorized to add an employee")
+                            }
+                        })
+                    }
                     console.log(event);
                     if(confirm("Are you sure you want to remove it?"))
                     {

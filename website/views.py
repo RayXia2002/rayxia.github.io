@@ -58,6 +58,9 @@ def insert():
             moderatorusername = request.form['moderatorusername']
             moderator = Account.query.filter_by(username=moderatorusername).first()
             moderatorid = moderator.employeeid
+            employeeusername = request.form['employeeusername']
+            employee = Account.query.filter_by(username=employeeusername).first()
+            employeeid = employee.employeeid
             
             cur.execute("INSERT INTO Meeting (purpose, start_time, end_time, locationid, mandatory, remote, moderatorid) VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING id", [purpose, start, end, locationid, mandatory, remote, moderatorid])
             meetingid = cur.fetchone()["id"]
@@ -83,6 +86,21 @@ def update():
             msg = 'success'
         return jsonify(msg)
 
+@views.route("/insattendee", methods=["POST","GET"])
+def insattendee():
+    if (current_user.roleid == 1):
+        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        if request.method == 'POST':
+            employeeusername = request.form['employeeusername']
+            user = Account.query.filter_by(username=employeeusername).first()
+            employeeid = user.employeeid
+            meetingid = request.form['meetingid']
+            cur.execute("INSERT INTO Attendees (employeeid, meetingid) VALUES (%s,%s)", [employeeid, meetingid])
+            conn.commit()
+            cur.close()
+            msg = 'success'
+        return jsonify(msg)
+    
 @views.route("/delete", methods=["POST","GET"])
 def delete():
     if (current_user.roleid == 1):
